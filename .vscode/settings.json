@@ -1,0 +1,11 @@
+{
+    "versionlens.suggestions.indicators": {
+        
+        "Directory": "📁 ",
+        "Error": "🔴",
+        "Latest": "🟢",
+        "NoMatch": "⚪",
+        "Match": "🟡",
+        "Updateable": "↑ "
+    }
+}
