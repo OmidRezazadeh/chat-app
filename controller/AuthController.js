@@ -46,5 +46,37 @@ const registerValidation = require('../Validation/UserValidation'); // Correct i
         );
         return token;
     }
+ 
+exports.login = async (req, res) => {
+    const { email, password } = req.body;
+
+    // Simple validation
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Please provide email and password' });
+    }
+
+    try {
+        // Find the user by email
+        const user = await User.findOne({ email: email });
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        // Check the password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        // Generate a token
+        const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: '2h' });
+
+        res.json({ token });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+    
 
 

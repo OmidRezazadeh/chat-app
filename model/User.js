@@ -15,6 +15,7 @@ const UerSChema=mongoose.Schema({
         minlength: 4,
         maxlength: 255,
     },
+    socket_id: { type: String },
     created_at: {
         type: Date,
         default: Date.now,

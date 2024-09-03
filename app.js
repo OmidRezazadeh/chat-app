@@ -1,8 +1,9 @@
 const express =require( "express");
 const app = express();
 app.use(express.json());
+const { Server } = require("socket.io");
 const dotEnv  =require ("dotenv");
-const connectDB = require('./config/db'); // Include the .js extension
+const connectDB = require('./config/db'); 
 const router = require('./routes/auth');
 dotEnv.config({path: ".env"});
 
