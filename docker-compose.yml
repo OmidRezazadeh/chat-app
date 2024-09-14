@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: chatApp
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongo_db
+    env_file:
+      - .env
+    networks:
+      - chatapp-network
+
+  mongo_db:
+    container_name: mongodb
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_URI: ${MONGO_URI}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - chatapp-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  chatapp-network:
