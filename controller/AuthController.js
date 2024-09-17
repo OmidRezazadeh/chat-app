@@ -6,7 +6,7 @@ const registerValidation = require('../Validation/UserValidation'); // Correct i
 
 
      exports.register= async(req, res)=> {
-        console.log(req.body);
+    
         try {
             const { error } = registerValidation.validate(req.body);
             if (error) {

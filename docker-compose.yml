@@ -18,23 +18,33 @@ services:
     networks:
       - chatapp-network
 
+   
   mongo_db:
     container_name: mongodb
     image: mongo:latest
     restart: always
     ports:
-      - "27018:27017"
-    environment:
-      MONGO_URI: ${MONGO_URI}
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      - "27017:27017"
     volumes:
-      - mongodb_data:/data/db
+      - mongodb:/data/db
+      - ./mongo-entrypoint:/docker-entrypoint-initdb.d
+      - mongoconfig:/data/configdb
+    environment:
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}   
+
+      
     networks:
       - chatapp-network
 
+  
+   
+
 volumes:
-  mongodb_data:
+  mongodb:
+  mongoconfig:
+  
 
 networks:
   chatapp-network:
