@@ -1,40 +1,46 @@
+version: "3.8"
+
 services:
+  # MongoDB service configuration
   mongo_db:
-    container_name: mongodb
-    image: mongo:latest
-    restart: always
+    container_name: mongodb  # Name of the MongoDB container
+    image: mongo:latest  # Pulls the latest MongoDB image
+    restart: always  # Always restart the container if it stops
     ports:
-      - "27017:27017"
+      - "27017:27017"  # Exposes port 27017 for MongoDB connections
     volumes:
-      - mongodb:/data/db
-      - ./mongo-entrypoint:/docker-entrypoint-initdb.d
-      - mongoconfig:/data/configdb
+      - mongodb:/data/db  # Persistent storage for MongoDB data
+      - ./mongo-entrypoint:/docker-entrypoint-initdb.d  # Custom initialization scripts for MongoDB
+      - mongoconfig:/data/configdb  # Persistent storage for MongoDB configuration data
     environment:
-      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}  # Initializes MongoDB with a default database name from the .env file
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}  # Sets MongoDB root username from the .env file
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}  # Sets MongoDB root password from the .env file
     networks:
-      - chatapp-network
+      - chatapp-network  # Connects MongoDB to the specified network
 
+  # Application service configuration
   app:
-    container_name: chatApp
+    container_name: chatApp  # Name of the application container
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: .  # Uses the current directory as the build context
+      dockerfile: Dockerfile  # Specifies the Dockerfile for building the app
     ports:
-      - "3000:3000"
+      - "3000:3000"  # Exposes port 3000 for the application
     volumes:
-      - .:/usr/src/app
+      - .:/usr/src/app  # Mounts the current directory into the container to allow live code changes
     depends_on:
-      - mongo_db
+      - mongo_db  # Ensures that the app waits for the MongoDB container to start
     env_file:
-      - .env
+      - .env  # Loads environment variables from the .env file
     networks:
-      - chatapp-network
+      - chatapp-network  # Connects the app to the specified network
 
+# Volumes for persistent storage
 volumes:
-  mongodb:
-  mongoconfig:
+  mongodb:  # Volume for MongoDB data
+  mongoconfig:  # Volume for MongoDB configuration
 
+# Network configuration
 networks:
-  chatapp-network:
+  chatapp-network:  # Network to connect the app and MongoDB
